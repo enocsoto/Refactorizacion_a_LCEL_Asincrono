@@ -1,0 +1,11 @@
+[project]
+name = "refactorizacion-lcel-asincrono"
+version = "0.1.0"
+description = "Refactorización a LCEL asíncrono."
+requires-python = ">=3.12"
+dependencies = [
+    "langchain",
+    "langchain-openai",
+    "langchain-anthropic",
+    "python-dotenv",
+]
