@@ -19,3 +19,11 @@ Completa la clave del proveedor y ejecuta:
 ```
 
 `LLM_PROVIDER` vale `openai` (por defecto) o `anthropic`.
+
+## Tests
+
+No llaman a la API.
+
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+```
