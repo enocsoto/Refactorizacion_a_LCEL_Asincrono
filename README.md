@@ -2,6 +2,10 @@
 
 Una cadena `prompt | modelo | StrOutputParser` toma `{"contexto", "pregunta"}` y devuelve texto plano.
 
+- El operador `|` arma la cadena en `build_chain`: prompt, modelo y `StrOutputParser`.
+- `main` es asíncrona y ejecuta `await chain.ainvoke(...)`.
+- El prompt es un `ChatPromptTemplate` con rol system y rol human. El modelo se crea con `model_name` y `temperature`.
+
 ## Cómo correrlo
 
 Requiere Python 3.12.

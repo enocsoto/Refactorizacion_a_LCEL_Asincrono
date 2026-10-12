@@ -4,7 +4,11 @@ import os
 from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+    SystemMessagePromptTemplate,
+)
 from langchain_openai import ChatOpenAI
 
 TEMPERATURE = 0.7
@@ -13,12 +17,11 @@ ANTHROPIC_MODEL_NAME = "claude-3-5-haiku-latest"
 
 prompt = ChatPromptTemplate.from_messages(
     [
-        (
-            "system",
+        SystemMessagePromptTemplate.from_template(
             "Respondes en español, claro y breve. "
-            "Ten en cuenta este contexto cuando aplique: {contexto}",
+            "Ten en cuenta este contexto cuando aplique: {contexto}"
         ),
-        ("human", "{pregunta}"),
+        HumanMessagePromptTemplate.from_template("{pregunta}"),
     ]
 )
 
@@ -37,10 +40,14 @@ def chat_model() -> ChatOpenAI | ChatAnthropic:
     raise RuntimeError(f"LLM_PROVIDER no reconocido: {provider}")
 
 
+def build_chain(model: ChatOpenAI | ChatAnthropic):
+    """Composición LCEL: prompt | modelo | texto plano."""
+    return prompt | model | StrOutputParser()
+
+
 async def main() -> None:
     load_dotenv()
-    model = chat_model()
-    chain = prompt | model | StrOutputParser()
+    chain = build_chain(chat_model())
     respuesta = await chain.ainvoke(
         {
             "contexto": "El usuario está practicando una cadena LCEL asíncrona.",
